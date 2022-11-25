@@ -4,12 +4,9 @@ using UnityEngine;
 
 public class Movement : MonoBehaviour
 {
-    //Animation States
-    const string IDLE = "idle";
-    const string WALK = "walk";
+    [SerializeField] private float speed = 6f;
     Animator animator;
     Rigidbody player;
-    private string currentState;
     // Start is called before the first frame update
     void Start()
     {
@@ -20,25 +17,15 @@ public class Movement : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        Vector3 move = new Vector3(Input.GetAxis("Horizontal"), 0, Input.GetAxis("Vertical"));
-        ChangeAnimationState(WALK);
-
-        if (player.velocity == new Vector3(0, 0, 0))
+        transform.Translate(Vector3.forward * Time.deltaTime * Input.GetAxis("Vertical") * speed);
+        animator.SetBool("walk", true);
         {
-            ChangeAnimationState(IDLE);
+            animator.SetBool("idle", true);
+        }
+        if (Input.GetKey(KeyCode.LeftShift))
+        {
+
         }
 
-    }
-
-    void ChangeAnimationState(string newState)
-    {
-        // Stops the same animation from playing again
-        if (currentState == newState) return;
-
-        //play the animation
-        animator.Play(newState);
-
-        //reassign the current state
-        currentState = newState;
     }
 }
